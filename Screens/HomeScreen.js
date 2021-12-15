@@ -4,6 +4,9 @@ import {
   ScrollView,
   Touchable,
   TouchableOpacity,
+  Animated,
+  Easing,
+  StatusBar,
 } from "react-native";
 import styled from "styled-components";
 import Card from "../components/Card";
@@ -28,69 +31,125 @@ function mapDispatchToProps(dispatch) {
 }
 
 class HomeScreen extends React.Component {
+  state = {
+    scale: new Animated.Value(1),
+    opacity: new Animated.Value(1),
+  };
+
+  componentDidMount() {
+    StatusBar.setBarStyle("dark-content", true);
+  }
+
+  componentDidUpdate() {
+    this.toggleMenu();
+  }
+
+  toggleMenu = () => {
+    if (this.props.action == "openMenu") {
+      Animated.timing(this.state.scale, {
+        toValue: 0.9,
+        duration: 300,
+        Easing: Easing.in(),
+        useNativeDriver: false,
+      }).start();
+
+      Animated.spring(this.state.opacity, {
+        toValue: 0.6,
+        useNativeDriver: false,
+      }).start();
+
+      StatusBar.setBarStyle("light-content", true);
+    }
+
+    if (this.props.action == "closeMenu") {
+      Animated.timing(this.state.scale, {
+        toValue: 1,
+        duration: 300,
+        Easing: Easing.out(),
+        useNativeDriver: false,
+      }).start();
+      Animated.spring(this.state.opacity, {
+        toValue: 1,
+        useNativeDriver: false,
+      }).start();
+    }
+  };
+
   render() {
     return (
-      <Container>
+      <RootView>
         <Menu />
-        <SafeAreaView>
-          <ScrollView>
-            <TitleBar>
-              <TouchableOpacity onPress={this.props.openMenu}>
-                <Avatar source={require("../assets/avatar.jpg")}></Avatar>
-              </TouchableOpacity>
-              <Title>Welcome back,</Title>
-              <Name>Geo</Name>
-              <Notifications
-                style={{ position: "absolute", right: 20, top: 15 }}
-              />
-            </TitleBar>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              {logos.map((logo, index) => {
-                return <Logo image={logo.image} text={logo.text} key={index} />;
-              })}
-            </ScrollView>
-            <Subtitle>Continue learning</Subtitle>
-            <ScrollView
-              horizontal={true}
-              style={{ paddingBottom: 20 }}
-              showsHorizontalScrollIndicator={false}
-            >
-              {cards.map((card, index) => {
-                return (
-                  <Card
-                    key={index}
-                    title={card.title}
-                    image={card.image}
-                    logo={card.logo}
-                    caption={card.caption}
-                    subtitle={card.subtitle}
-                  />
-                );
-              })}
-            </ScrollView>
-            <Subtitle>Popular courses</Subtitle>
+        <AnimatedContainer
+          style={{
+            transform: [{ scale: this.state.scale }],
+            opacity: this.state.opacity,
+          }}
+        >
+          <SafeAreaView>
             <ScrollView>
-              {courses.map((course, index) => {
-                return (
-                  <Courses
-                    key={index}
-                    image={course.image}
-                    logo={course.logo}
-                    subtitle={course.subtitle}
-                    title={course.title}
-                    avatar={course.avatar}
-                    caption={course.caption}
-                    author={course.author}
-                  />
-                );
-              })}
+              <TitleBar>
+                <TouchableOpacity
+                  onPress={this.props.openMenu}
+                  style={{ position: "absolute", top: 0, left: 0 }}
+                >
+                  <Avatar source={require("../assets/avatar.jpg")}></Avatar>
+                </TouchableOpacity>
+                <Title>Welcome back,</Title>
+                <Name>Geo</Name>
+                <Notifications
+                  style={{ position: "absolute", right: 20, top: 15 }}
+                />
+              </TitleBar>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+                {logos.map((logo, index) => {
+                  return (
+                    <Logo image={logo.image} text={logo.text} key={index} />
+                  );
+                })}
+              </ScrollView>
+              <Subtitle>Continue learning</Subtitle>
+              <ScrollView
+                horizontal={true}
+                style={{ paddingBottom: 20 }}
+                showsHorizontalScrollIndicator={false}
+              >
+                {cards.map((card, index) => {
+                  return (
+                    <Card
+                      key={index}
+                      title={card.title}
+                      image={card.image}
+                      logo={card.logo}
+                      caption={card.caption}
+                      subtitle={card.subtitle}
+                    />
+                  );
+                })}
+              </ScrollView>
+              <Subtitle>Popular courses</Subtitle>
+              <ScrollView>
+                {courses.map((course, index) => {
+                  return (
+                    <Courses
+                      key={index}
+                      image={course.image}
+                      logo={course.logo}
+                      subtitle={course.subtitle}
+                      title={course.title}
+                      avatar={course.avatar}
+                      caption={course.caption}
+                      author={course.author}
+                    />
+                  );
+                })}
+              </ScrollView>
             </ScrollView>
-          </ScrollView>
-        </SafeAreaView>
-      </Container>
+          </SafeAreaView>
+        </AnimatedContainer>
+      </RootView>
     );
   }
 }
@@ -200,6 +259,11 @@ const Subtitle = styled.Text`
   text-transform: uppercase;
 `;
 
+const RootView = styled.View`
+  background: black;
+  flex: 1;
+`;
+
 const Avatar = styled.Image`
   width: 44px;
   height: 44px;
@@ -211,7 +275,11 @@ const Avatar = styled.Image`
 const Container = styled.View`
   flex: 1;
   background-color: #f0f3f5;
+  border-radius: 10px;
+  overflow: hidden;
 `;
+
+const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
 const Title = styled.Text`
   font-size: 16px;

@@ -36,7 +36,7 @@ class Menu extends React.Component {
   toggleMenu = () => {
     if (this.props.action == "openMenu") {
       Animated.spring(this.state.top, {
-        toValue: 0,
+        toValue: 54,
         useNativeDriver: false,
       }).start();
     }
@@ -88,6 +88,8 @@ const Container = styled.View`
   height: 100%;
   width: 100%;
   z-index: 50;
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
 const AnimatedContainer = new Animated.createAnimatedComponent(Container);
