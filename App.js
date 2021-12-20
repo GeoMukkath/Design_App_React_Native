@@ -2,6 +2,7 @@ import React from "react";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import HomeScreen from "./Screens/HomeScreen";
+import AppNavigator from "./navigator/AppNavigator";
 
 const inintialState = {
   action: "openMenu",
@@ -23,7 +24,7 @@ const store = createStore(reducer);
 const App = () => {
   return (
     <Provider store={store}>
-      <HomeScreen />
+      <AppNavigator />
     </Provider>
   );
 };

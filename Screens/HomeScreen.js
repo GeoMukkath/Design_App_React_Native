@@ -31,6 +31,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 class HomeScreen extends React.Component {
+  static navigationOptions = {
+    headerShown: false,
+  };
+
   state = {
     scale: new Animated.Value(1),
     opacity: new Animated.Value(1),
@@ -90,9 +94,9 @@ class HomeScreen extends React.Component {
               <TitleBar>
                 <TouchableOpacity
                   onPress={this.props.openMenu}
-                  style={{ position: "absolute", top: 0, left: 0 }}
+                  style={{ position: "absolute", top: 0, left: 20 }}
                 >
-                  <Avatar source={require("../assets/avatar.jpg")}></Avatar>
+                  <Image source={require("../assets/avatar.jpg")} />
                 </TouchableOpacity>
                 <Title>Welcome back,</Title>
                 <Name>Geo</Name>
@@ -118,14 +122,20 @@ class HomeScreen extends React.Component {
               >
                 {cards.map((card, index) => {
                   return (
-                    <Card
+                    <TouchableOpacity
                       key={index}
-                      title={card.title}
-                      image={card.image}
-                      logo={card.logo}
-                      caption={card.caption}
-                      subtitle={card.subtitle}
-                    />
+                      onPress={() => {
+                        this.props.navigation.push("Section");
+                      }}
+                    >
+                      <Card
+                        title={card.title}
+                        image={card.image}
+                        logo={card.logo}
+                        caption={card.caption}
+                        subtitle={card.subtitle}
+                      />
+                    </TouchableOpacity>
                   );
                 })}
               </ScrollView>
@@ -212,6 +222,13 @@ const cards = [
   },
 ];
 
+const Image = styled.Image`
+  height: 40px;
+  width: 40px;
+  padding-left: 30px;
+  border-radius: 22px;
+`;
+
 const courses = [
   {
     title: "Prototype in InVision Studio",
@@ -262,14 +279,6 @@ const Subtitle = styled.Text`
 const RootView = styled.View`
   background: black;
   flex: 1;
-`;
-
-const Avatar = styled.Image`
-  width: 44px;
-  height: 44px;
-  background-color: black;
-  border-radius: 22px;
-  margin-left: 20px;
 `;
 
 const Container = styled.View`
