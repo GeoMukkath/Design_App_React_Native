@@ -89,6 +89,7 @@ class HomeScreen extends React.Component {
             opacity: this.state.opacity,
           }}
         >
+          <StatusBar hidden />
           <SafeAreaView>
             <ScrollView>
               <TitleBar>
@@ -125,7 +126,9 @@ class HomeScreen extends React.Component {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        this.props.navigation.push("Section");
+                        this.props.navigation.push("Section", {
+                          section: card,
+                        });
                       }}
                     >
                       <Card
