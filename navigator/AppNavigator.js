@@ -2,6 +2,7 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import HomeScreen from "../Screens/HomeScreen";
 import SectionScreen from "../Screens/SectionScreen";
+import TabNavigator from "./TabNavigator";
 
 const AppNavigator = createStackNavigator(
   {
@@ -13,4 +14,4 @@ const AppNavigator = createStackNavigator(
   }
 );
 
-export default createAppContainer(AppNavigator);
+export default createAppContainer(TabNavigator);
